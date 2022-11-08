@@ -1,26 +1,39 @@
 const PIXI = require("pixi.js");
 
 const app = new PIXI.Application({
-  width: 640,
-  height: 640,
+  width: 256,
+  height: 256,
   backgroundColor: 0x1099bb,
 });
 
 document.body.appendChild(app.view);
 
-const container = new PIXI.Container();
+PIXI.Loader.shared.add("./ferris.png").load(setup);
 
-app.stage.addChild(container);
+function setup() {
+  const Sprite = PIXI.Sprite;
 
-const texture = PIXI.Texture.from("./smiley-icon.svg");
+  const ferris1 = new Sprite(
+    PIXI.Loader.shared.resources["./ferris.png"].texture
+  );
+  ferris1.x = 100;
+  ferris1.y = 100;
 
-const smile = new PIXI.Sprite(texture);
-smile.anchor.set(0.5);
+  const ferris2 = new Sprite(
+    PIXI.Loader.shared.resources["./ferris.png"].texture
+  );
+  ferris2.x = 166;
+  ferris2.y = 166;
 
-container.addChild(smile);
-container.x = app.screen.width / 2;
-container.y = app.screen.height / 2;
+  ferris1.scale.set(0.9);
+  ferris2.scale.set(0.7);
+  ferris2.anchor.set(0.5);
 
-container.pivot.x = container.width / 2;
-container.pivot.y = container.height / 2;
-app.ticker.add((delta) => (container.rotation -= 0.01 * delta));
+  app.stage.addChild(ferris1);
+  app.stage.addChild(ferris2);
+
+  app.ticker.add((delta) => {
+    ferris1.rotation -= 0.01 * delta;
+    ferris2.rotation += 0.01 * delta;
+  });
+}
